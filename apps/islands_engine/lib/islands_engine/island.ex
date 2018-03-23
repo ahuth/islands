@@ -17,6 +17,16 @@ defmodule IslandsEngine.Island do
     not MapSet.disjoint?(first_island.coordinates, second_island.coordinates)
   end
 
+  def guess(island, coordinate) do
+    case MapSet.member?(island.coordinates, coordinate) do
+      true ->
+        hit_coordinates = MapSet.put(island.hit_coordinates, coordinate)
+        {:hit, %{island | hit_coordinates: hit_coordinates}}
+      false ->
+        :miss
+    end
+  end
+
   defp add_coordinates(offsets, upper_left) do
     Enum.reduce_while(offsets, MapSet.new, fn offset, acc ->
       add_coordinate(acc, upper_left, offset)

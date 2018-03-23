@@ -93,4 +93,21 @@ defmodule IslandsEngine.IslandTest do
       refute Subject.overlaps?(square, l_shape)
     end
   end
+
+  describe "guess/2" do
+    test "correctly guessing" do
+      {:ok, coordinate} = Coordinate.new(1, 1)
+      {:ok, island} = Subject.new(:square, coordinate)
+      {:ok, guess} = Coordinate.new(2, 2)
+      {:hit, island} = Subject.guess(island, guess)
+      assert island.hit_coordinates == MapSet.new([guess])
+    end
+
+    test "incorrectly guessing" do
+      {:ok, coordinate} = Coordinate.new(1, 1)
+      {:ok, island} = Subject.new(:square, coordinate)
+      {:ok, guess} = Coordinate.new(6, 8)
+      assert Subject.guess(island, guess) == :miss
+    end
+  end
 end
