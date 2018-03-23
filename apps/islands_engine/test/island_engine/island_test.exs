@@ -3,11 +3,14 @@ defmodule IslandsEngine.IslandTest do
   alias IslandsEngine.Coordinate
   alias IslandsEngine.Island, as: Subject
 
-  @origin %Coordinate{row: 1, col: 1}
-
   describe "new/2" do
-    test "squares" do
-      {:ok, island} = Subject.new(:square, @origin)
+    setup do
+      {:ok, coordinate} = Coordinate.new(1, 1)
+      {:ok, %{origin: coordinate}}
+    end
+
+    test "squares", context do
+      {:ok, island} = Subject.new(:square, context.origin)
       assert island.coordinates == MapSet.new([
         %Coordinate{row: 1, col: 1},
         %Coordinate{row: 1, col: 2},
@@ -16,8 +19,8 @@ defmodule IslandsEngine.IslandTest do
       ])
     end
 
-    test "atolls" do
-      {:ok, island} = Subject.new(:atoll, @origin)
+    test "atolls", context do
+      {:ok, island} = Subject.new(:atoll, context.origin)
       assert island.coordinates == MapSet.new([
         %Coordinate{row: 1, col: 1},
         %Coordinate{row: 1, col: 2},
@@ -27,15 +30,15 @@ defmodule IslandsEngine.IslandTest do
       ])
     end
 
-    test "dots" do
-      {:ok, island} = Subject.new(:dot, @origin)
+    test "dots", context do
+      {:ok, island} = Subject.new(:dot, context.origin)
       assert island.coordinates == MapSet.new([
         %Coordinate{row: 1, col: 1},
       ])
     end
 
-    test "L shapes" do
-      {:ok, island} = Subject.new(:l_shape, @origin)
+    test "L shapes", context do
+      {:ok, island} = Subject.new(:l_shape, context.origin)
       assert island.coordinates == MapSet.new([
         %Coordinate{row: 1, col: 1},
         %Coordinate{row: 2, col: 1},
@@ -44,8 +47,8 @@ defmodule IslandsEngine.IslandTest do
       ])
     end
 
-    test "S shapes" do
-      {:ok, island} = Subject.new(:s_shape, @origin)
+    test "S shapes", context do
+      {:ok, island} = Subject.new(:s_shape, context.origin)
       assert island.coordinates == MapSet.new([
         %Coordinate{row: 1, col: 2},
         %Coordinate{row: 1, col: 3},
@@ -54,8 +57,8 @@ defmodule IslandsEngine.IslandTest do
       ])
     end
 
-    test "invalid shapes result in an error" do
-      assert Subject.new(:foobar, @origin) == {:error, :invalid_island_type}
+    test "invalid shapes result in an error", context do
+      assert Subject.new(:foobar, context.origin) == {:error, :invalid_island_type}
     end
 
     test "invalid coordinates result in an error" do
