@@ -110,4 +110,25 @@ defmodule IslandsEngine.IslandTest do
       assert Subject.guess(island, guess) == :miss
     end
   end
+
+  describe "forested?/1" do
+    test "a fully covered island" do
+      {:ok, coordinate} = Coordinate.new(1, 1)
+      {:ok, island} = Subject.new(:dot, coordinate)
+      island = %{island | hit_coordinates: MapSet.new([%Coordinate{row: 1, col: 1}])}
+      assert Subject.forested?(island)
+    end
+
+    test "a not fully covered island" do
+      {:ok, coordinate} = Coordinate.new(1, 1)
+      {:ok, island} = Subject.new(:dot, coordinate)
+      refute Subject.forested?(island)
+    end
+  end
+
+  describe "types/0" do
+    test "lists all valid types" do
+      assert Subject.types == [:atoll, :dot, :l_shape, :s_shape, :square]
+    end
+  end
 end

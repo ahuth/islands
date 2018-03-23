@@ -27,6 +27,12 @@ defmodule IslandsEngine.Island do
     end
   end
 
+  def forested?(island) do
+    MapSet.equal?(island.coordinates, island.hit_coordinates)
+  end
+
+  def types, do: [:atoll, :dot, :l_shape, :s_shape, :square]
+
   defp add_coordinates(offsets, upper_left) do
     Enum.reduce_while(offsets, MapSet.new, fn offset, acc ->
       add_coordinate(acc, upper_left, offset)
