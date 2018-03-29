@@ -57,4 +57,55 @@ defmodule IslandsEngine.BoardTest do
       assert Subject.all_islands_positioned?(board)
     end
   end
+
+  describe "guess/2" do
+    test "a miss" do
+      board = Subject.new
+      {:ok, coord} = Coordinate.new(1, 1)
+      {:ok, square} = Island.new(:square, coord)
+      board = Subject.position_island(board, :square, square)
+      {:ok, guess} = Coordinate.new(8, 8)
+      response = Subject.guess(board, guess)
+      assert response == {:miss, :none, :no_win, board}
+    end
+
+    test "a hit that neither wins nor forests an island" do
+      board = Subject.new
+      {:ok, coord} = Coordinate.new(1, 1)
+      {:ok, square} = Island.new(:square, coord)
+      board = Subject.position_island(board, :square, square)
+      {:ok, guess} = Coordinate.new(2, 2)
+      {:hit, :none, :no_win, board} = Subject.guess(board, guess)
+      square = Map.fetch!(board, :square)
+      assert Map.fetch!(square, :hit_coordinates) == MapSet.new([guess])
+    end
+
+    test "a hit that forests an island" do
+      board = Subject.new
+
+      {:ok, coord} = Coordinate.new(1, 1)
+      {:ok, square} = Island.new(:square, coord)
+      board = Subject.position_island(board, :square, square)
+
+      {:ok, coord} = Coordinate.new(7, 8)
+      {:ok, dot} = Island.new(:dot, coord)
+      board = Subject.position_island(board, :dot, dot)
+
+      {:ok, guess} = Coordinate.new(7, 8)
+      {:hit, :dot, :no_win, board} = Subject.guess(board, guess)
+      dot = Map.fetch!(board, :dot)
+      assert Map.fetch!(dot, :hit_coordinates) == MapSet.new([guess])
+    end
+
+    test "a hit that wins the game" do
+      board = Subject.new
+      {:ok, coord} = Coordinate.new(5, 5)
+      {:ok, dot} = Island.new(:dot, coord)
+      board = Subject.position_island(board, :dot, dot)
+      {:ok, guess} = Coordinate.new(5, 5)
+      {:hit, :dot, :win, board} = Subject.guess(board, guess)
+      dot = Map.fetch!(board, :dot)
+      assert Map.fetch!(dot, :hit_coordinates) == MapSet.new([guess])
+    end
+  end
 end
