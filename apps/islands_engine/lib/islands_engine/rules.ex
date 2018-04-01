@@ -17,13 +17,13 @@ defmodule IslandsEngine.Rules do
   def check(%Rules{state: :players_set} = rules, {:set_islands, player}) do
     rules = Map.put(rules, player, :islands_set)
     case both_players_islands_set?(rules) do
-      true -> {:ok, %Rules{rules | state: :player1}}
+      true -> {:ok, %Rules{rules | state: :player1_turn}}
       false -> {:ok, rules}
     end
   end
   def check(_, _), do: :error
 
   defp both_players_islands_set?(rules) do
-    rules.player1 == :islands_set && rules.player2 == :island_set
+    rules.player1 == :islands_set && rules.player2 == :islands_set
   end
 end

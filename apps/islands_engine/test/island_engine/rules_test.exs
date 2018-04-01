@@ -33,5 +33,19 @@ defmodule IslandsEngine.RulesTest do
       {:ok, new_rules} = Subject.check(rules, {:position_islands, :player1})
       assert rules == new_rules
     end
+
+    test "from players_set with set_islands when neither player is set" do
+      rules = %Subject{state: :players_set, player1: :islands_not_set, player2: :islands_not_set}
+      {:ok, rules} = Subject.check(rules, {:set_islands, :player1})
+      assert rules.state == :players_set
+      assert rules.player1 == :islands_set
+    end
+
+    test "from players_set with set_islands when both players end up set" do
+      rules = %Subject{state: :players_set, player1: :islands_set, player2: :islands_not_set}
+      {:ok, rules} = Subject.check(rules, {:set_islands, :player2})
+      assert rules.state == :player1_turn
+      assert rules.player2 == :islands_set
+    end
   end
 end
