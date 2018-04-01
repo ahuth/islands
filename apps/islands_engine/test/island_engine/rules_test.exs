@@ -23,12 +23,12 @@ defmodule IslandsEngine.RulesTest do
       assert rules == %Subject{state: :players_set}
     end
 
-    test "from players_set to position_islands when the player is set" do
+    test "from players_set with position_islands when the player is set" do
       rules = %Subject{state: :players_set, player1: :islands_set}
       assert Subject.check(rules, {:position_islands, :player1}) == :error
     end
 
-    test "from players_set to position_islands when the player is not set" do
+    test "from players_set with position_islands when the player is not set" do
       rules = %Subject{state: :players_set, player1: :islands_not_set}
       {:ok, new_rules} = Subject.check(rules, {:position_islands, :player1})
       assert rules == new_rules
