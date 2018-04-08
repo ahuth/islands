@@ -47,5 +47,16 @@ defmodule IslandsEngine.RulesTest do
       assert rules.state == :player1_turn
       assert rules.player2 == :islands_set
     end
+
+    test "from player1_turn with guess_coordinate for player 1" do
+      rules = %Subject{state: :player1_turn}
+      {:ok, rules} = Subject.check(rules, {:guess_coordinate, :player1})
+      assert rules.state == :player2_turn
+    end
+
+    test "from player1_turn with guess_coordinate for player 2" do
+      rules = %Subject{state: :player1_turn}
+      assert Subject.check(rules, {:guess_coordinate, :player2}) == :error
+    end
   end
 end
