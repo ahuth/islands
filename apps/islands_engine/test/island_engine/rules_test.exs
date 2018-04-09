@@ -58,5 +58,17 @@ defmodule IslandsEngine.RulesTest do
       rules = %Subject{state: :player1_turn}
       assert Subject.check(rules, {:guess_coordinate, :player2}) == :error
     end
+
+    test "from player1_turn with win_check when it is a win" do
+      rules = %Subject{state: :player1_turn}
+      {:ok, rules} = Subject.check(rules, {:win_check, :win})
+      assert rules.state == :game_over
+    end
+
+    test "from player1_turn with win_check when it is not a win" do
+      rules = %Subject{state: :player1_turn}
+      {:ok, rules} = Subject.check(rules, {:win_check, :no_win})
+      assert rules.state == :player1_turn
+    end
   end
 end
