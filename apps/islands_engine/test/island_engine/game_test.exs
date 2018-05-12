@@ -54,8 +54,7 @@ defmodule IslandsEngine.GameTest do
     :ok = Subject.position_island(game, :player1, :dot, 1, 1)
     :ok = Subject.position_island(game, :player2, :square, 1, 4)
 
-    state = :sys.get_state(game)
-    state = :sys.replace_state(game, fn data ->
+    :sys.replace_state(game, fn data ->
       %{data | rules: %Rules{state: :player1_turn}}
     end)
 
