@@ -29,4 +29,20 @@ defmodule IslandsEngine.GameTest do
 
     assert Subject.position_island(game, :player1, :dot, 1, 1) == {:error, :overlapping_island}
   end
+
+  test "setting", %{game: game} do
+    :ok = Subject.add_player(game, "Fred")
+    assert Subject.set_islands(game, :player1) == {:error, :not_all_islands_positioned}
+
+    :ok = Subject.position_island(game, :player1, :atoll, 1, 1)
+    :ok = Subject.position_island(game, :player1, :dot, 1, 4)
+    :ok = Subject.position_island(game, :player1, :l_shape, 1, 5)
+    :ok = Subject.position_island(game, :player1, :s_shape, 5, 1)
+    :ok = Subject.position_island(game, :player1, :square, 5, 5)
+    {:ok, _} = Subject.set_islands(game, :player1)
+
+    state = :sys.get_state(game)
+    assert state.rules.player1 == :islands_set
+    assert state.rules.state == :players_set
+  end
 end
