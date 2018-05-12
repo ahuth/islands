@@ -9,6 +9,8 @@ defmodule IslandsEngine.Application do
       IslandsEngine.GameSupervisor,
     ]
 
+    :ets.new(:game_state, [:public, :named_table])
+
     opts = [strategy: :one_for_one, name: IslandsEngine.Supervisor]
     Supervisor.start_link(children, opts)
   end

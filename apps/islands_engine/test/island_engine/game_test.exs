@@ -1,9 +1,13 @@
 defmodule IslandsEngine.GameTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   alias IslandsEngine.Game, as: Subject
   alias IslandsEngine.Rules
 
   setup do
+    on_exit fn ->
+      :ets.delete_all_objects(:game_state)
+    end
+
     {:ok, game} = Subject.start_link("Wilma")
     %{game: game}
   end
