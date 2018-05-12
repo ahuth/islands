@@ -26,5 +26,7 @@ defmodule IslandsEngine.GameTest do
     :ok = Subject.position_island(game, :player1, :square, 1, 1)
     state = :sys.get_state(game)
     assert Map.has_key?(state.player1.board, :square)
+
+    assert Subject.position_island(game, :player1, :dot, 1, 1) == {:error, :overlapping_island}
   end
 end

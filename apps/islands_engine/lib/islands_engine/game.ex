@@ -48,6 +48,7 @@ defmodule IslandsEngine.Game do
       :error -> {:reply, :error, state_data}
       {:error, :invalid_coordinate} -> {:reply, {:error, :invalid_coordinate}, state_data}
       {:error, :invalid_island_type} -> {:reply, {:error, :invalid_island_type}, state_data}
+      {:error, :overlapping_island} -> {:reply, {:error, :overlapping_island}, state_data}
     end
   end
 
