@@ -1,6 +1,7 @@
 defmodule IslandsEngine.GameTest do
   use ExUnit.Case, async: true
   alias IslandsEngine.Game, as: Subject
+  alias IslandsEngine.Rules
 
   setup do
     {:ok, game} = Subject.start_link("Wilma")
@@ -44,5 +45,22 @@ defmodule IslandsEngine.GameTest do
     state = :sys.get_state(game)
     assert state.rules.player1 == :islands_set
     assert state.rules.state == :players_set
+  end
+
+  test "guessing", %{game: game} do
+    :ok = Subject.add_player(game, "Fred")
+    assert Subject.guess_coordinate(game, :player1, 1, 1) == :error
+
+    :ok = Subject.position_island(game, :player1, :dot, 1, 1)
+    :ok = Subject.position_island(game, :player2, :square, 1, 4)
+
+    state = :sys.get_state(game)
+    state = :sys.replace_state(game, fn data ->
+      %{data | rules: %Rules{state: :player1_turn}}
+    end)
+
+    assert Subject.guess_coordinate(game, :player1, 5, 5) == {:miss, :none, :no_win}
+    assert Subject.guess_coordinate(game, :player1, 5, 5) == :error
+    assert Subject.guess_coordinate(game, :player2, 1, 1) == {:hit, :dot, :win}
   end
 end
