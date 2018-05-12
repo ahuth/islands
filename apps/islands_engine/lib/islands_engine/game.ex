@@ -16,6 +16,12 @@ defmodule IslandsEngine.Game do
     {:ok, fresh_state(name)}
   end
 
+  def terminate({:shutdown, :timeout}, state_data) do
+    :ets.delete(:game_state, state_data.player1.name)
+    :ok
+  end
+  def terminate(_reason, _state), do: :ok
+
   def add_player(game, name) when is_binary(name) do
     GenServer.call(game, {:add_player, name})
   end
@@ -40,6 +46,10 @@ defmodule IslandsEngine.Game do
 
     :ets.insert(:game_state, {name, state_data})
     {:noreply, state_data, @timeout}
+  end
+
+  def handle_info(:timeout, state_data) do
+    {:stop, {:shutdown, :timeout}, state_data}
   end
 
   def handle_call({:add_player, name}, _from, state_data) do
